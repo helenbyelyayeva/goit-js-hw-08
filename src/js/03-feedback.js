@@ -1,47 +1,42 @@
 import throttle from "lodash.throttle";
 
-
 const form = document.querySelector('.feedback-form');
+const inputEmail = document.querySelector('[name ="email"]');
+const textareaMes = document.querySelector('[name ="message"]');
+inputEmail.setAttribute('id', 'email');
+textareaMes.setAttribute('id', 'message');
 
 
-const inputEl = document.querySelector('[name ="email"]');
-
-
-const textareaEl = document.querySelector('[name ="message"]');
-inputEl.setAttribute('id', 'email');
-textareaEl.setAttribute('id', 'message');
-
-
-populateForm();
+filledForm();
 
 
 form.addEventListener('input', throttle(onFormInput, 500));
 form.addEventListener('submit', onFormSubmit);
 
 
-let userStorage = {};
+let dataStorage = {};
 
 
-function onFormInput(e) {
-   e.preventDefault();
+function onFormInput(event) {
+   event.preventDefault();
   
-   const name = e.target;
-   const value = e.target.value;
+   const name = event.target;
+   const value = event.target.value;
    const attributeName = name.getAttribute("id");
    if (attributeName === 'email') {
-        userStorage.email = value;
+        dataStorage.email = value;
    } else {
-       userStorage.message = value;
+       dataStorage.message = value;
    }
-   const userData = JSON.stringify(userStorage);
+   const userData = JSON.stringify(dataStorage);
    localStorage.setItem('feedback-form-state', userData);
  
 }
 
 
-function onFormSubmit(e) {
-   e.preventDefault();
-   e.currentTarget.reset();
+function onFormSubmit(event) {
+   event.preventDefault();
+   event.currentTarget.reset();
    const savedData = localStorage.getItem('feedback-form-state');
    const parsedSavedData = JSON.parse(savedData);
    console.log("email:", parsedSavedData.email);
@@ -50,20 +45,20 @@ function onFormSubmit(e) {
 }
 
 
-function populateForm() {
+function filledForm() {
    const savedData = localStorage.getItem('feedback-form-state');
    if (savedData) {
        const parsedSavedData = JSON.parse(savedData);
       
-       inputEl.value = parsedSavedData.email;
+       inputEmail.value = parsedSavedData.email;
       
-       textareaEl.value = parsedSavedData.message;
+       textareaMes.value = parsedSavedData.message;
       if(parsedSavedData.email === undefined){
-       inputEl.value = ''; 
+       inputEmail.value = ''; 
        } if (parsedSavedData.message === undefined) {
-           textareaEl.value = '';
+           textareaMes.value = '';
    }
    }
-   
+
 }
 
